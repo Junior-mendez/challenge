@@ -1,3 +1,7 @@
+import { AgedBrie } from "./AgedBrie";
+import { Backstage } from "./Backstage";
+import { Conjured } from "./Conjured";
+import { Default } from "./Default";
 export class Item {
     name: string;
     sellIn: number;
@@ -19,49 +23,33 @@ export class GildedRose {
 
     updateQuality() {
         for (let i = 0; i < this.items.length; i++) {
-            if (this.items[i].name != 'Aged Brie' && this.items[i].name != 'Backstage passes to a TAFKAL80ETC concert') {
-                if (this.items[i].quality > 0) {
-                    if (this.items[i].name != 'Sulfuras, Hand of Ragnaros') {
-                        this.items[i].quality = this.items[i].quality - 1
-                    }
+            const type = this.items[i].name;
+            switch(type) { 
+                case "Aged Brie": { 
+                    const age = new AgedBrie();
+                    this.items[i] = age.updateQuality(this.items[i]);
+                    break; 
+                } 
+                case "Backstage passes to a TAFKAL80ETC concert": { 
+                    const backstage = new Backstage();
+                    this.items[i] = backstage.updateQuality(this.items[i]);
+                    break; 
                 }
-            } else {
-                if (this.items[i].quality < 50) {
-                    this.items[i].quality = this.items[i].quality + 1
-                    if (this.items[i].name == 'Backstage passes to a TAFKAL80ETC concert') {
-                        if (this.items[i].sellIn < 11) {
-                            if (this.items[i].quality < 50) {
-                                this.items[i].quality = this.items[i].quality + 1
-                            }
-                        }
-                        if (this.items[i].sellIn < 6) {
-                            if (this.items[i].quality < 50) {
-                                this.items[i].quality = this.items[i].quality + 1
-                            }
-                        }
-                    }
+                case "Sulfuras, Hand of Ragnaros": { 
+                    break; 
+                } 
+                case "Conjured": { 
+                    const conjured = new Conjured();
+                    this.items[i] = conjured.updateQuality(this.items[i]);
+                    break; 
                 }
-            }
-            if (this.items[i].name != 'Sulfuras, Hand of Ragnaros') {
-                this.items[i].sellIn = this.items[i].sellIn - 1;
-            }
-            if (this.items[i].sellIn < 0) {
-                if (this.items[i].name != 'Aged Brie') {
-                    if (this.items[i].name != 'Backstage passes to a TAFKAL80ETC concert') {
-                        if (this.items[i].quality > 0) {
-                            if (this.items[i].name != 'Sulfuras, Hand of Ragnaros') {
-                                this.items[i].quality = this.items[i].quality - 1
-                            }
-                        }
-                    } else {
-                        this.items[i].quality = this.items[i].quality - this.items[i].quality
-                    }
-                } else {
-                    if (this.items[i].quality < 50) {
-                        this.items[i].quality = this.items[i].quality + 1
-                    }
+                default:{
+                    const normal = new Default();
+                    this.items[i] = normal.updateQuality(this.items[i]);
+                    break; 
+                    
                 }
-            }
+            } 
         }
 
         return this.items;
